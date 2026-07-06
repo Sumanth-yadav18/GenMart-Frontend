@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
 import Home from "./pages/Home";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
@@ -8,13 +7,13 @@ import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./Components/ProtectedRoute";
 import Orders from "./pages/Orders";
 import OrderSuccess from "./pages/OrderSuccess";
 import Wishlist from "./pages/Wishlist";
 import ForgotPassword from "./pages/ForgotPassword";
 import { useEffect, useState } from "react";
-import Loader from "./components/Loader";
+import Loader from "./Components/Loader";
 import NotFound from "./pages/NotFound";
 
 function Layout() {
