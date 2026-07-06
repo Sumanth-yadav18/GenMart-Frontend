@@ -64,10 +64,12 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://127.0.0.1:8000/token/", {
-        username,
-        password,
-      });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/token/`,
+          {
+            username,
+            password,
+          }
+      );
 
       dispatch(
         loginSuccess({
@@ -122,10 +124,12 @@ function Login() {
     if (!valid) return;
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/forgot-password/", {
-        email: fpEmail,
-        new_password: fpPassword,
-      });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/forgot-password/`,
+        {
+            email: fpEmail,
+            new_password: fpPassword,
+        }
+      );
 
       toast.success(res.data.message);
 
