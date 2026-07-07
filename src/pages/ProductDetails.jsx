@@ -50,18 +50,12 @@ function ProductDetails() {
       return;
     }
 
-    await dispatch(
-      addToCart({
-        product,
-        quantity: qty,
-        showToast: false,
-      }),
-    );
-
     toast.success("Proceeding to Checkout");
 
-    navigate("/checkout");
-  };
+    navigate("/checkout", {
+      state: {buyNow: {...product,qty,},},
+    });
+    };
 
   if (!product) {
     return <h3 className="text-center mt-5">Loading...</h3>;

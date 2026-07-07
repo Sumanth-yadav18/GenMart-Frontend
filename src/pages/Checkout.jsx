@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../services/api";
@@ -9,9 +9,13 @@ import { loadCart } from "../features/cart/cartSlice";
 function Checkout() {
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart.items);
-
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const cart = useSelector((state) => state.cart.items);
+  const buyNowItem = location.state?.buyNow;
+  const checkoutItems = buyNowItem ? [buyNowItem] : cart;
 
   const [placingOrder, setPlacingOrder] = useState(false);
 
@@ -22,7 +26,7 @@ function Checkout() {
     address: "",
   });
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const total = checkoutItems.reduce((sum, item) => sum + item.price * item.qty,0,);
 
   const handleChange = (e) => {
     setFormData({
@@ -32,7 +36,7 @@ function Checkout() {
   };
 
   const placeOrder = async () => {
-    if (cart.length === 0) {
+    if (checkoutItems.length === 0) {
       toast.error("Cart is empty");
       return;
     }
@@ -100,7 +104,7 @@ function Checkout() {
       setPlacingOrder(false);
     }
   };
-  if (cart.length === 0) {
+  if (checkoutItems.length==0) {
     return (
       <div className={`container ${styles.emptyWrapper}`}>
         <div className={styles.emptyCard}>
@@ -198,7 +202,7 @@ function Checkout() {
                 <h3 className={styles.cardTitle}>Order Summary</h3>
 
                 <div className={styles.productsList}>
-                  {cart.map((item) => (
+                  {checkoutItems.map((item) => (
                     <div key={item.id} className={styles.product}>
                       <img
                         src={item.image}
@@ -222,7 +226,7 @@ function Checkout() {
                 <div className={styles.summaryRow}>
                   <span>Total Items</span>
 
-                  <span>{cart.length}</span>
+                  <span>{checkoutItems.length}</span>
                 </div>
 
                 <div className={styles.summaryRow}>
