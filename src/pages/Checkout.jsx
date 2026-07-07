@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart } from "../features/cart/cartSlice";
 import { api } from "../services/api";
 import styles from "./Checkout.module.css";
+import { loadCart } from "../features/cart/cartSlice";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -12,6 +12,8 @@ function Checkout() {
   const cart = useSelector((state) => state.cart.items);
 
   const navigate = useNavigate();
+
+  const [placingOrder, setPlacingOrder] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: "",
@@ -65,6 +67,7 @@ function Checkout() {
       return;
     }
 
+    setPlacingOrder(true);
     try {
       const res = await api.post("orders/", {
         full_name,
@@ -73,7 +76,11 @@ function Checkout() {
         address,
       });
 
-      await dispatch(clearCart());
+      try {
+        await dispatch(loadCart()).unwrap();
+      } catch (e) {
+        console.log("Cart reload failed", e);
+      }
 
       toast.success("Order Placed Successfully");
 
@@ -83,8 +90,14 @@ function Checkout() {
         },
       });
     } catch (err) {
-      console.log(err);
+      console.log("Checkout Error:", err);
+      console.log("Response:", err.response);
+      console.log("Data:", err.response?.data);
+      console.log("Status:", err.response?.status);
+
       toast.error("Unable to place order");
+    } finally {
+      setPlacingOrder(false);
     }
   };
   if (cart.length === 0) {
@@ -235,8 +248,9 @@ function Checkout() {
                   <button
                     className={`btn ${styles.orderBtn}`}
                     onClick={placeOrder}
+                    disabled={placingOrder}
                   >
-                    Place Order
+                    {placingOrder ? "Placing Order..." : "Place Order"}
                   </button>
                 </div>
               </div>
