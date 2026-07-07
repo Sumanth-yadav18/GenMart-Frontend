@@ -26,7 +26,10 @@ function Checkout() {
     address: "",
   });
 
-  const total = checkoutItems.reduce((sum, item) => sum + item.price * item.qty,0,);
+  const total = checkoutItems.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0,
+  );
 
   const handleChange = (e) => {
     setFormData({
@@ -95,16 +98,12 @@ function Checkout() {
       });
     } catch (err) {
       console.log("Checkout Error:", err);
-      console.log("Response:", err.response);
-      console.log("Data:", err.response?.data);
-      console.log("Status:", err.response?.status);
-
       toast.error("Unable to place order");
     } finally {
       setPlacingOrder(false);
     }
   };
-  if (checkoutItems.length==0) {
+  if (checkoutItems.length == 0) {
     return (
       <div className={`container ${styles.emptyWrapper}`}>
         <div className={styles.emptyCard}>
